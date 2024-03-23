@@ -21,9 +21,11 @@
 %----------
 % 版面设置
 %----------
-%首段缩进
-\usepackage{indentfirst}
-\setlength{\parindent}{2.1em}
+% %首段缩进
+% \usepackage{indentfirst}
+% \setlength{\parindent}{2.1em}
+% 设置段落不缩进
+\setlength{\parindent}{0pt}
 
 %行距
 \renewcommand{\baselinestretch}{1.2} % 1.4倍行距
@@ -67,25 +69,26 @@
 % 习题与解答环境
 %----------
 %习题环境
-\theoremstyle{definition} 
-\newtheorem{problem}{题目}
+\newtheoremstyle{problemstyle} % 定义一个名为 problemstyle 的新风格
+  {3pt} % 上部空白量
+  {3pt} % 下部空白量
+  {} % 正文字体
+  {} % 缩进量
+  {\bfseries} % 标题字体
+  {} % 标题后的标点
+  {\newline} % 标题后的空白
+  {\underline{\thmname{#1}\thmnumber{ #2}}\thmnote{ (#3)}} % 定理头部格式
+
+\theoremstyle{problemstyle} % 使用 problemstyle 风格
+\newtheorem{problem}{题目} % 定义题目环境
 
 %解答环境
-\ifx\proof\undefined\
-\newenvironment{proof}[1][\protect\proofname]{\par
-\normalfont\topsep6\p@\@plus6\p@\relax
-\trivlist
-\itemindent\parindent
-\item[\hskip\labelsep
-\scshape
-#1]\ignorespaces
-}{%
-\endtrivlist\@endpefalse
-}
-\fi
-\renewcommand{\proofname}{\it{解答}}
-
-
+\newenvironment{solution}
+  {%
+    \renewcommand\qedsymbol{$\blacksquare$}%
+    \proof[\textit{解答}]\mbox{}\vspace{-4ex}\\%
+  }
+  {\endproof}
 %----------
 % 我的自定义
 %----------
@@ -168,9 +171,57 @@ SPJ表示供货关系，各属性依次为供应商号，零件号，工程号�
 
 \end{problem}
 
-\begin{proof}
+\begin{solution}
 
-\end{proof}
+\begin{enumerate}
+  \item 
+  \[
+    \Pi_{SNAME}
+    \left(
+      S \bowtie
+      \left(
+      \left(\Pi_{SNO}\sigma_{CITY=Beijing}\left(SPJ \bowtie J\right)\right)
+      \cap
+      \left(\Pi_{SNO}\sigma_{CITY=Tianjin}\left(SPJ \bowtie J\right)\right)
+      \right)
+    \right)
+  \]
+  \item 
+  \[
+    \Pi_{SNO}
+    \left(
+      S \bowtie SPJ \bowtie J
+    \right)
+  \]
+  \item 
+  \[
+    \Pi_{SNO}
+    \left(S\right)-
+    \Pi_{SNO}
+    \left(
+      S \bowtie SPJ \bowtie J
+    \right)
+  \]
+  \item 
+  \[
+    \Pi_{SNO, CITY}\left(SPJ\bowtie J\right)
+    \div
+    \Pi_{CITY}\left(SPJ\bowtie J\right)
+  \]
+  \item 
+  \[
+    \Pi_{PNO}
+    \left[
+    P\bowtie
+    \left(
+    \Pi_{PRICE}\left(P\right)-
+    \Pi_{P_1.PRICE}\sigma_{P_1.PRICE<P_2.PRICE}\left(\rho_{P_1}(P)\times \rho_{P_2}(P)\right)
+    \right)
+    \right]
+  \]
+\end{enumerate}
+
+\end{solution}
 
 \begin{problem}
 对于选课表SC (sno, cno, grade)，完成如下查询：
@@ -195,19 +246,60 @@ SPJ表示供货关系，各属性依次为供应商号，零件号，工程号�
 
 \end{problem}  
 
-\begin{proof}
+\begin{solution}
 
-\end{proof}
+  \begin{enumerate}
+    \item 
+    \[
+      (\Pi_{sno}\sigma_{cno=c1}SC)\cap (\Pi_{sno}\sigma_{cno=c2}SC)
+    \]
+    \item 
+    \[
+      (\Pi_{sno}SC) - (\Pi_{sno}\sigma_{cno\neq c2\wedge cno\neq c1}SC)
+    \]
+    \item 
+    \[
+      (\Pi_{sno, cno}SC) \div (\Pi_{cno}\sigma_{sno=s1}SC)
+    \]
+    \item 反过来，先找没有被包含的
+    \[
+      \Pi_{sno}SC-\Pi_{sno}(SC-\Pi_{R2.sno, R2.cno}(\sigma_{R1.sno=s1\wedge R2.sno\neq s1\wedge R1.cno=R2.cno}(\rho_{R1}(SC)\times \rho_{R2}(SC))))
+    \]
+    \item 反过来，先求存在一样课的人
+    \[
+      \Pi_{sno}SC-\Pi_{R2.sno}(\sigma_{R1.sno=s1\wedge R1.cno=R2.cno}(\rho_{R1}(SC)\times \rho_{R2}(SC)))
+    \]
+    \item 所修课程完全相同 $\Leftrightarrow$ 所修课程被包含且包含
+    \begin{align*}
+      &((\Pi_{sno, cno}SC) \div (\Pi_{cno}\sigma_{sno=s1}SC))\\
+      &\cap\\
+      &(\Pi_{sno}SC-\Pi_{sno}(SC-\Pi_{R2.sno, R2.cno}(\sigma_{R1.sno=s1\wedge R2.sno\neq s1\wedge R1.cno=R2.cno}(\rho_{R1}(SC)\times \rho_{R2}(SC)))))
+    \end{align*}
+    \item 不会写
+
+  \end{enumerate}
+
+\end{solution}
 
 \begin{problem}
 对于关系R(A, B)，用关系代数来检验A是否取值唯一。
+
 更进一步，对于关系R(A, B, C)，用关系代数来检验A是否取值唯一。
+
 （注意，“唯一”的意思是两两不同，而不是只取同一个值，那个应该叫“单一”）  
 \end{problem}
 
-\begin{proof}
+\begin{solution}
 
-\end{proof}
+对A作投影，检查表项是否减少了，即可检测出A是否取值唯一
+\[
+R-(R\bowtie\Pi_A(R))
+\]
+如果是空表，那么A取值唯一
+
+对于关系R(A, B, C)，同理
+
+\end{solution}
 
 \begin{problem}
 对于选课表SC(sno, cno, grade)，分别用元组关系演算和域关系演算，完成如下查询：
@@ -219,9 +311,35 @@ SPJ表示供货关系，各属性依次为供应商号，零件号，工程号�
   
 \end{problem}
 
-\begin{proof}
+\begin{solution}
 
-\end{proof}
+\textbf{元组关系演算：}
+
+\begin{enumerate}
+  \item 
+  \[
+    \{t|\exists u\exists v(u[sno]=t[sno]\wedge v[sno]=t[sno]\wedge u[cno]=c1\wedge v[cno]=c2)\}
+  \]
+  \item 
+  \[
+    \{t|\forall u(u[sno]\neq s1\vee u[cno]\neq c1\vee (u[sno]=s1\wedge u[cno]=c1\wedge t[cno]=c1\wedge t[grade]>u[grade]))\}
+  \]
+\end{enumerate}
+
+\textbf{域关系演算：}
+
+\begin{enumerate}
+  \item 
+  \[
+    \{\left< s\right> |\exists\left< c_x\right> ,\left< c_y\right> ,\left< g_x\right> ,\left< g_y\right> (\left< s,c_x,g_x\right> ,\left< s,c_y,g_y\right> \in SC\wedge c_x=c1\wedge c_y=c2)\}
+  \]
+  \item 
+  \[
+    \{\left< s\right> |\exists\left<  c\right>  ,\left< g\right> \forall\left< s_x,c_x,g_x\right> (s_x\neq s1\vee c_x\neq c1\vee(s_x=s1\wedge c_x=c1\wedge\left< s,c,g\right> \in SC\wedge c=c1\wedge g> g_x))\}
+  \]
+\end{enumerate}
+
+\end{solution}
 
 \newpage
 \bibliographystyle{plain}
