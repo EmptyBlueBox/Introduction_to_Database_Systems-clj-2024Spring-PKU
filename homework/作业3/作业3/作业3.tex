@@ -206,18 +206,12 @@ SPJ表示供货关系，各属性依次为供应商号，零件号，工程号�
   \[
     \Pi_{SNO, CITY}\left(SPJ\bowtie J\right)
     \div
-    \Pi_{CITY}\left(SPJ\bowtie J\right)
+    \Pi_{CITY}\sigma_{\text{CITY=北京}}\left(SPJ\bowtie J\right)
   \]
   \item 
   \[
-    \Pi_{PNO}
-    \left[
-    P\bowtie
-    \left(
-    \Pi_{PRICE}\left(P\right)-
-    \Pi_{P_1.PRICE}\sigma_{P_1.PRICE<P_2.PRICE}\left(\rho_{P_1}(P)\times \rho_{P_2}(P)\right)
-    \right)
-    \right]
+    \Pi_{PNO}\left(P\right)-
+    \Pi_{P_1.PNO}\sigma_{P_1.PRICE<P_2.PRICE}\left(\rho_{P_1}(P)\times \rho_{P_2}(P)\right)
   \]
 \end{enumerate}
 
@@ -255,7 +249,7 @@ SPJ表示供货关系，各属性依次为供应商号，零件号，工程号�
     \]
     \item 
     \[
-      (\Pi_{sno}SC) - (\Pi_{sno}\sigma_{cno\neq c2\wedge cno\neq c1}SC)
+      (\Pi_{sno}\sigma_{cno=c_1}SC)\cup(\Pi_{sno}\sigma_{cno=c_2}SC) - (\Pi_{sno}\sigma_{cno\neq c2\wedge cno\neq c1}SC)
     \]
     \item 
     \[
@@ -291,13 +285,17 @@ SPJ表示供货关系，各属性依次为供应商号，零件号，工程号�
 
 \begin{solution}
 
-对A作投影，检查表项是否减少了，即可检测出A是否取值唯一
-\[
-R-(R\bowtie\Pi_A(R))
-\]
-如果是空表，那么A取值唯一
+对于关系R(A, B),检查如下表达式是否为空集,如果是空集,那么说明A取值唯一,否则A取值不唯一
 
-对于关系R(A, B, C)，同理
+\[
+\sigma_{R1.A=R2.A\wedge R1.B\neq R2.B}(\rho_{R1}R\times \rho_{R2}R)
+\]
+
+对于关系R(A, B, C),检查如下表达式是否为空集,如果是空集,那么说明A取值唯一,否则A取值不唯一
+
+\[
+\sigma_{R1.A=R2.A\wedge (R1.B\neq R2.B\vee R1.C\neq R2.C)}(\rho_{R1}R\times \rho_{R2}R)
+\]
 
 \end{solution}
 
@@ -322,7 +320,7 @@ R-(R\bowtie\Pi_A(R))
   \]
   \item 
   \[
-    \{t|\forall u(u[sno]\neq s1\vee u[cno]\neq c1\vee (u[sno]=s1\wedge u[cno]=c1\wedge t[cno]=c1\wedge t[grade]>u[grade]))\}
+    \{t|\exists u(u[sno]=s1\wedge u[cno]=c1\wedge t[cno]=c1\wedge t[grade]>u[grade])\}
   \]
 \end{enumerate}
 
@@ -331,11 +329,11 @@ R-(R\bowtie\Pi_A(R))
 \begin{enumerate}
   \item 
   \[
-    \{\left< s\right> |\exists\left< c_x\right> ,\left< c_y\right> ,\left< g_x\right> ,\left< g_y\right> (\left< s,c_x,g_x\right> ,\left< s,c_y,g_y\right> \in SC\wedge c_x=c1\wedge c_y=c2)\}
+    \{\left< s\right> |\exists\left< g_x\right> ,\left< g_y\right> (\left< s,c1,g_x\right> ,\left< s,c2,g_y\right> \in SC)\}
   \]
   \item 
   \[
-    \{\left< s\right> |\exists\left<  c\right>  ,\left< g\right> \forall\left< s_x,c_x,g_x\right> (s_x\neq s1\vee c_x\neq c1\vee(s_x=s1\wedge c_x=c1\wedge\left< s,c,g\right> \in SC\wedge c=c1\wedge g> g_x))\}
+    \{\left< s\right> |\exists\left< g\right>, \left< g1\right> (\left< s,c1,g\right> \in SC\wedge \left< s1,c1,g1\right> \in SC\wedge g> g_x)\}
   \]
 \end{enumerate}
 
