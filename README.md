@@ -1,9 +1,7 @@
-# Introduction_to_Database_Systems-clj-2024Spring-PKU
+# Introduction to Database Systems Repo
 
-## Intro
+This is a repo for Introduction to Database Systems course in Peking University, 2024 Spring, by Prof. Chen Lijun.
 
-这是北京大学数据库概论课程的相关内容仓库，包括
-
-1. 课程课件
-2. 课程笔记
-3. 课程作业
+1. Slides
+2. Course notes
+3. Homeworks
