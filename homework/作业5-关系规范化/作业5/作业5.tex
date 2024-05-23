@@ -1,0 +1,290 @@
+\documentclass[12pt]{article} % 12pt 为字号大小 UTF8
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+%\usepackage{fontspec,xltxtra,xunicode}
+%\usepackage{times}
+
+%----------
+% 定义中文环境
+%----------
+
+\usepackage{xeCJK}
+
+% \setCJKmainfont[BoldFont={SimHei},ItalicFont={KaiTi}]{SimSun}
+% \setCJKsansfont{SimHei}
+% \setCJKfamilyfont{zhsong}{SimSun}
+% \setCJKfamilyfont{zhhei}{SimHei}
+
+% \newcommand*{\songti}{\CJKfamily{zhsong}} % 宋体
+% \newcommand*{\heiti}{\CJKfamily{zhhei}}   % 黑体
+
+
+%----------
+% 版面设置
+%----------
+% %首段缩进
+% \usepackage{indentfirst}
+% \setlength{\parindent}{2.1em}
+% 设置段落不缩进
+\setlength{\parindent}{0pt}
+
+%行距
+\renewcommand{\baselinestretch}{1.2} % 1.4倍行距
+
+%页边距
+\usepackage[a4paper]{geometry}
+\geometry{verbose,
+  tmargin=3cm,% 上边距
+  bmargin=3cm,% 下边距
+  lmargin=3cm,% 左边距
+  rmargin=3cm % 右边距
+}
+
+
+%----------
+% 其他宏包
+%----------
+%图形相关
+\usepackage[x11names]{xcolor} % must before tikz, x11names defines RoyalBlue3
+\usepackage{graphicx}
+\usepackage{pstricks,pst-plot,pst-eps}
+\usepackage{subfig}
+\def\pgfsysdriver{pgfsys-dvipdfmx.def} % put before tikz
+\usepackage{tikz}
+
+%原文照排
+\usepackage{verbatim}
+\usepackage{float}
+
+%网址
+\usepackage{url}
+
+%文本格式
+\usepackage{ulem} % 用法：\uline{}下划线，\uwave{}波浪线，\sout{}删除线
+\usepackage{pifont} % 用法：\ding{数字}代表数字被圈起来
+\usepackage{enumitem} % 使用enumitem宏包自定义列表样式
+\usepackage{hyperref} % 不仅可以帮助你插入链接，还能让这些链接在生成的PDF文档中是可点击的，提高文档的互动性，用法：\url{http://www.example.com}
+
+% 代码块
+\usepackage{verbatim}
+
+%----------
+% 习题与解答环境
+%----------
+\usepackage{mdframed}
+\newenvironment{problem}[2][Problem]
+    { \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+    {  \end{mdframed}}
+
+\newenvironment{solution}
+    { \begin{mdframed} \textbf{Solution:} \\}
+    {  \end{mdframed}}
+
+    % 我的自定义
+%----------
+
+\newcommand{\horrule}[1]{\rule[0.5ex]{\linewidth}{#1}} 	% Horizontal rule
+
+\renewcommand{\refname}{参考文献}
+\renewcommand{\abstractname}{\large \bf 摘\quad 要}
+\renewcommand{\contentsname}{目录}
+\renewcommand{\tablename}{表}
+\renewcommand{\figurename}{图}
+
+\setlength{\parskip}{0.4ex} % 段落间距
+
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+\setitemize[1]{itemsep=0.4ex,partopsep=0.4ex,parsep=\parskip,topsep=0.4ex}
+\setdescription{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+
+
+%==========
+% 正文部分
+%==========
+
+\begin{document}
+
+\title{
+{\normalfont\normalsize\textsc{
+Peking University\\
+Introduction to Database Systems, Spring 2024 \\[25pt]}}
+\horrule{0.5pt}\\
+\sffamily{第七章\ 关系规范化\\课后作业}
+\horrule{1.8pt}\\[20pt]
+}
+\author{梁昱桐\quad 2100013116\\lyt0112@outlook.com}
+% \date{} % 若不需要自动插入日期，则去掉前面的注释；{ } 中也可以自定义日期格式
+
+\begin{titlepage}
+\maketitle
+\vspace{30pt}
+
+% \begin{abstract}
+% \normalsize \ \ 这是中文摘要。大概写满这一页可以了。摘要又称概要、内容提要。摘要是以提供文献内容梗概为目的，不加评论和补充解释，简明、确切地记述文献重要内容的短文。其基本要素包括研究目的、方法、结果和结论。具体地讲就是研究工作的主要对象和范围，采用的手段和方法，得出的结果和重要的结论，有时也包括具有情报价值的其它重要的信息。\\[5pt]
+% \indent \ \ \textbf{关键词}：图卷积神经网络，复杂网络，表示学习
+% \end{abstract}
+
+\thispagestyle{empty}
+\end{titlepage}
+
+% \tableofcontents
+% \thispagestyle{empty}
+
+\newpage
+\setcounter{page}{1}
+
+\begin{problem}{1}
+一个全是主属性的关系模式最高一定可以达到第几范式?
+\end{problem}
+
+\begin{solution}
+3NF
+\end{solution}
+
+\begin{problem}{2}
+一个全码的关系模式最高一定可以达到第几范式?
+\end{problem}
+
+\begin{solution}
+BCNF
+\end{solution}
+
+\begin{problem}{3}
+任何一个二目关系模式 $R(A,B)$ 一定属于 BCNF 吗
+\end{problem}
+\begin{solution}
+不一定.
+
+考虑一个关系模式$R(A,B)$,其中A是主属性,B是非主属性.
+如果存在一个非平凡的函数依赖 $A\rightarrow B$ ，且A不是候选键,那么这个关系模式就不符合BCNF,因为函数依赖$A\rightarrow B$违反了BCNF的定义.
+\end{solution}
+
+\begin{problem}{4}
+一个只有一个候选码的3NF关系模式是 BCNF 的吗
+\end{problem}
+\begin{solution}
+不一定.
+
+即使一个关系模式只有一个候选码,如果它的某些非平凡函数依赖是由非候选码决定的,那么它就不符合BCNF.
+\end{solution}
+
+\begin{problem}{5}
+一个候选码全是单属性的关系模式最高一定可以达到第几范式?
+\end{problem}
+\begin{solution}
+2NF
+\end{solution}
+
+\begin{problem}{6}
+多值依赖和保持无损连接的模式分解之间的关系是什么?
+\end{problem}
+\begin{solution}
+当我们进行模式分解时,需要考虑保持无损连接的原则,确保分解后的模式仍然能够保留原始数据的完整性和完整性,满足多值依赖的要求,以便通过连接操作重建原始关系.
+\end{solution}
+
+\begin{problem}{7}
+BCNF分解算法是如何保证分解是无损的?
+\end{problem}
+\begin{solution}
+确定函数依赖,确定超键,识别非平凡的函数依赖,选择违反BCNF的函数依赖,应用分解操作并重复,直到所有的关系模式都满足BCNF.
+\end{solution}
+
+\begin{problem}{8}
+3NF分解算法的第3步,如何确定此时关系模式已经是3NF的了?
+\end{problem}
+\begin{solution}
+检查所有非平凡的传递依赖是否被消除.
+\end{solution}
+
+\begin{problem}{题目一}
+\[  
+\mathrm{R(ABCDE),F=\{AB~\to~C,B~\to~D,CD~\to~E,CE~\to~B,AC~\to~B\}}
+\]
+\end{problem}
+\begin{solution}
+1.	给出其候选码 AB AC 
+2.	判断范式级别 1NF
+3.	分别给出保持无损连接和函数依赖的分解 R1(ACD), R2(BCE), R3(BD)
+\end{solution}
+
+\begin{problem}{题目二}
+R(ABCDE), 给出下面函数依赖集在S(ABCD)上的投影
+\[\mathrm{F=\{AB~\to~D,AC~\to~E,BC~\to~D,D~\to~A,E~\to~B\}}\]
+\end{problem}
+\begin{solution}
+\[F_S=\{AB\to D,BC\to D,D\to A\}\]
+\end{solution}
+
+\begin{problem}{题目三}
+关系模式R(BCDFGH)
+其函数依赖集为
+\[\{\mathrm{BG~\to~CD,~G~\to~F,CD~\to~GH,C~\to~FG,F~\to~D}\}\]
+给出其同时保持函数依赖和无损的3NF分解
+\end{problem}
+\begin{solution}
+{BGCD},{GF},{CG},{CDH},{DF}
+\end{solution}
+
+\begin{problem}{题目四}
+  R(ABCD)上成立函数依赖A → BCD和多值依赖B →→ C
+    判断R的范式级别  
+  （提示：小心掉坑，还有哪些隐藏的函数依赖？）
+\end{problem}
+\begin{solution}
+  3NF
+\end{solution}
+
+\begin{problem}{题目五}
+  给出判断关系r(ABC)上多值依赖A →→ B是否成立的关系代数和SQL语句
+\end{problem}
+\begin{solution}
+\[\begin{aligned}r_1&=\pi_{A,B}(r)\\r_2&=\pi_{A,C}(r)\\r_3&=r_1\bowtie r_2\end{aligned}\]
+
+\[\text{若 }r_{3}=r\text{,则多值依赖 }A\to\to B\text{ 成立。}\]
+
+\begin{verbatim}
+-- Step 1: 投影出 A 和 B 列
+CREATE TABLE r1 AS
+SELECT DISTINCT A, B
+FROM r;
+
+-- Step 2: 投影出 A 和 C 列
+CREATE TABLE r2 AS
+SELECT DISTINCT A, C
+FROM r;
+
+-- Step 3: 自然连接 r1 和 r2
+CREATE TABLE r3 AS
+SELECT r1.A, r1.B, r2.C
+FROM r1
+NATURAL JOIN r2;
+
+-- Step 4: 检查 r3 是否等于原表 r
+SELECT *
+FROM r
+EXCEPT
+SELECT *
+FROM r3;
+
+SELECT *
+FROM r3
+EXCEPT
+SELECT *
+FROM r;
+\end{verbatim}
+
+\end{solution}
+
+\begin{problem}{题目六}
+  给出函数依赖集{ABCD→E，E→D，A→B，AC→D}的最小覆盖
+\end{problem}
+\begin{solution}
+  {AC→E，E→D，A→B}
+\end{solution}
+
+% \newpage
+% \bibliographystyle{plain}
+% \bibliography{ref}
+
+
+\end{document}
