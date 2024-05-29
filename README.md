@@ -5,5 +5,6 @@ This is a repo for Introduction to Database Systems course in Peking University,
 This repo includes:
 
 1. Slides
-2. Course notes
-3. Homeworks
+2. Notes
+3. Homework
+4. Resources
