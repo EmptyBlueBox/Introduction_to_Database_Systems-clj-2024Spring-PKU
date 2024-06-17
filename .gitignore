@@ -9,7 +9,6 @@
 *.pdf
 !数据库作业答案.pdf
 !2024期末考试提纲.pdf
-!/slides/*.pdf
 *.doc
 *.docx
 *.ppt
