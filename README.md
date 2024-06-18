@@ -7,6 +7,7 @@ This repo includes:
 1. Slides
 2. Notes
    1. `数据库概论笔记.md` is the merged file of all notes
+   1. You can get a `.pdf` file from the `Releases` on GitHub
 3. Homework
 4. Resources
    1. Previous year exam questions
